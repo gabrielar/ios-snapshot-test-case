@@ -40,7 +40,7 @@
  @param tolerance The percentage of pixels that can differ and still count as an 'identical' view
  */
 #define FBSnapshotVerifyViewWithOptions(view__, identifier__, suffixes__, tolerance__) \
-  FBSnapshotVerifyViewOrLayerWithOptions(View, view__, identifier__, suffixes__, tolerance__)
+  FBSnapshotVerifyViewLayerOrImageWithOptions(View, view__, identifier__, suffixes__, tolerance__)
 
 #define FBSnapshotVerifyView(view__, identifier__) \
   FBSnapshotVerifyViewWithOptions(view__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0)
@@ -54,13 +54,27 @@
  @param tolerance The percentage of pixels that can differ and still count as an 'identical' layer
  */
 #define FBSnapshotVerifyLayerWithOptions(layer__, identifier__, suffixes__, tolerance__) \
-  FBSnapshotVerifyViewOrLayerWithOptions(Layer, layer__, identifier__, suffixes__, tolerance__)
+  FBSnapshotVerifyViewLayerOrImageWithOptions(Layer, layer__, identifier__, suffixes__, tolerance__)
 
 #define FBSnapshotVerifyLayer(layer__, identifier__) \
   FBSnapshotVerifyLayerWithOptions(layer__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0)
 
 
-#define FBSnapshotVerifyViewOrLayerWithOptions(what__, viewOrLayer__, identifier__, suffixes__, tolerance__) \
+/**
+ Similar to our much-loved XCTAssert() macros. Use this to perform your test. No need to write an explanation, though.
+ @param layer The layer to snapshot
+ @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
+ @param suffixes An NSOrderedSet of strings for the different suffixes
+ @param tolerance The percentage of pixels that can differ and still count as an 'identical' layer
+ */
+#define FBSnapshotVerifyImageWithOptions(image__, identifier__, suffixes__, tolerance__) \
+FBSnapshotVerifyViewLayerOrImageWithOptions(Image, image__, identifier__, suffixes__, tolerance__)
+
+#define FBSnapshotVerifyImage(image__, identifier__) \
+FBSnapshotVerifyLayerWithOptions(image__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0)
+
+
+#define FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewOrLayer__, identifier__, suffixes__, tolerance__) \
 { \
   NSString *referenceImageDirectory = [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)]; \
   XCTAssertNotNil(referenceImageDirectory, @"Missing value for referenceImagesDirectory - Set FB_REFERENCE_IMAGE_DIR as Environment variable in your scheme.");\
@@ -177,6 +191,21 @@
                    identifier:(NSString *)identifier
                     tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr;
+
+/**
+ Performs the comparison or records a snapshot of the image if recordMode is YES.
+ @param image The image to snapshot
+ @param referenceImagesDirectory The directory in which reference images are stored.
+ @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
+ @param tolerance The percentage difference to still count as identical - 0 mean pixel perfect, 1 means I don't care
+ @param errorPtr An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
+ @returns YES if the comparison (or saving of the reference image) succeeded.
+ */
+- (BOOL)compareSnapshotOfImage:(UIImage *)image
+      referenceImagesDirectory:(NSString *)referenceImagesDirectory
+                    identifier:(NSString *)identifier
+                     tolerance:(CGFloat)tolerance
+                         error:(NSError **)errorPtr;
 
 /**
  Checks if reference image with identifier based name exists in the reference images directory.

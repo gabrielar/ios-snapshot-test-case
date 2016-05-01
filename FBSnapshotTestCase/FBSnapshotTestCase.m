@@ -71,11 +71,11 @@
                      tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr
 {
-  return [self _compareSnapshotOfViewOrLayer:layer
-                    referenceImagesDirectory:referenceImagesDirectory
-                                  identifier:identifier
-                                   tolerance:tolerance
-                                       error:errorPtr];
+  return [self _compareSnapshotOfViewLayerOrImage:layer
+                         referenceImagesDirectory:referenceImagesDirectory
+                                       identifier:identifier
+                                        tolerance:tolerance
+                                            error:errorPtr];
 }
 
 - (BOOL)compareSnapshotOfView:(UIView *)view
@@ -84,11 +84,24 @@
                     tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr
 {
-  return [self _compareSnapshotOfViewOrLayer:view
-                    referenceImagesDirectory:referenceImagesDirectory
-                                  identifier:identifier
-                                   tolerance:tolerance
-                                       error:errorPtr];
+  return [self _compareSnapshotOfViewLayerOrImage:view
+                         referenceImagesDirectory:referenceImagesDirectory
+                                       identifier:identifier
+                                        tolerance:tolerance
+                                            error:errorPtr];
+}
+
+- (BOOL)compareSnapshotOfImage:(UIImage *)image
+      referenceImagesDirectory:(NSString *)referenceImagesDirectory
+                    identifier:(NSString *)identifier
+                     tolerance:(CGFloat)tolerance
+                         error:(NSError **)errorPtr
+{
+  return [self _compareSnapshotOfViewLayerOrImage:image
+                         referenceImagesDirectory:referenceImagesDirectory
+                                       identifier:identifier
+                                        tolerance:tolerance
+                                            error:errorPtr];
 }
 
 - (BOOL)referenceImageRecordedInDirectory:(NSString *)referenceImagesDirectory
@@ -119,18 +132,18 @@
 
 #pragma mark - Private API
 
-- (BOOL)_compareSnapshotOfViewOrLayer:(id)viewOrLayer
+- (BOOL)_compareSnapshotOfViewLayerOrImage:(id)viewLayerOrImage
              referenceImagesDirectory:(NSString *)referenceImagesDirectory
                            identifier:(NSString *)identifier
                             tolerance:(CGFloat)tolerance
                                 error:(NSError **)errorPtr
 {
   _snapshotController.referenceImagesDirectory = referenceImagesDirectory;
-  return [_snapshotController compareSnapshotOfViewOrLayer:viewOrLayer
-                                                  selector:self.invocation.selector
-                                                identifier:identifier
-                                                 tolerance:tolerance
-                                                     error:errorPtr];
+  return [_snapshotController compareSnapshotOfViewLayerOrImage:viewLayerOrImage
+                                                       selector:self.invocation.selector
+                                                     identifier:identifier
+                                                      tolerance:tolerance
+                                                          error:errorPtr];
 }
 
 @end
