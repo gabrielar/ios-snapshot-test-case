@@ -138,6 +138,8 @@ extern NSString *const FBDiffedImageKey;
                                 tolerance:(CGFloat)tolerance
                                     error:(NSError **)errorPtr;
 
+- (CGFloat)scaleOfViewLayerOrImage:(id)viewLayerOrImage;
+
 /**
  Loads a reference image.
  @param selector The test method being run.
@@ -148,6 +150,12 @@ extern NSString *const FBDiffedImageKey;
 - (UIImage *)referenceImageForSelector:(SEL)selector
                             identifier:(NSString *)identifier
                                  error:(NSError **)errorPtr;
+
+- (UIImage *)referenceImageForSelector:(SEL)selector
+                            identifier:(NSString *)identifier
+                                 scale:(CGFloat)scale
+                                 error:(NSError **)errorPtr;
+
 
 /**
  Performs a pixel-by-pixel comparison of the two images with an allowable margin of error.

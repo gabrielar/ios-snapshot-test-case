@@ -216,7 +216,10 @@ FBSnapshotVerifyLayerWithOptions(image__, identifier__, FBSnapshotTestCaseDefaul
  */
 - (BOOL)referenceImageRecordedInDirectory:(NSString *)referenceImagesDirectory
                                identifier:(NSString *)identifier
+                                    scale:(CGFloat)scale
                                     error:(NSError **)errorPtr;
+
+- (CGFloat)scaleOfViewLayerOrImage:(id)viewLayerOrImage;
 
 /**
  Returns the reference image directory.

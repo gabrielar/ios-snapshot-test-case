@@ -106,15 +106,22 @@
 
 - (BOOL)referenceImageRecordedInDirectory:(NSString *)referenceImagesDirectory
                                identifier:(NSString *)identifier
+                                    scale:(CGFloat)scale
                                     error:(NSError **)errorPtr
 {
     NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
     _snapshotController.referenceImagesDirectory = referenceImagesDirectory;
     UIImage *referenceImage = [_snapshotController referenceImageForSelector:self.invocation.selector
                                                                   identifier:identifier
+                                                                       scale:scale
                                                                        error:errorPtr];
 
     return (referenceImage != nil);
+}
+
+- (CGFloat)scaleOfViewLayerOrImage:(id)viewLayerOrImage
+{
+  return [_snapshotController scaleOfViewLayerOrImage:viewLayerOrImage];
 }
 
 - (NSString *)getReferenceImageDirectoryWithDefault:(NSString *)dir
