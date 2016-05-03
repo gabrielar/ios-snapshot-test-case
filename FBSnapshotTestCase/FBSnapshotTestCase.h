@@ -68,26 +68,36 @@
  @param tolerance The percentage of pixels that can differ and still count as an 'identical' layer
  */
 #define FBSnapshotVerifyImageWithOptions(image__, identifier__, suffixes__, tolerance__) \
-FBSnapshotVerifyViewLayerOrImageWithOptions(Image, image__, identifier__, suffixes__, tolerance__)
+  FBSnapshotVerifyViewLayerOrImageWithOptions(Image, image__, identifier__, suffixes__, tolerance__)
 
 #define FBSnapshotVerifyImage(image__, identifier__) \
-FBSnapshotVerifyLayerWithOptions(image__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0)
+  FBSnapshotVerifyImageWithOptions(image__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0)
 
 
-#define FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewOrLayer__, identifier__, suffixes__, tolerance__) \
+#define FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewLayerOrImage__, identifier__, suffixes__, tolerance__) \
+{ \
+  \
+  BOOL testSuccess__ = NO; \
+  NSMutableArray *errors__ = [NSMutableArray array]; \
+  \
+  _FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewLayerOrImage__, identifier__, suffixes__, tolerance__) \
+  \
+  XCTAssertTrue(testSuccess__, @"Snapshot comparison failed: %@", errors__.firstObject); \
+  XCTAssertFalse(self.recordMode, @"Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!"); \
+}
+
+#define _FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewLayerOrImage__, identifier__, suffixes__, tolerance__) \
 { \
   NSString *referenceImageDirectory = [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)]; \
   XCTAssertNotNil(referenceImageDirectory, @"Missing value for referenceImagesDirectory - Set FB_REFERENCE_IMAGE_DIR as Environment variable in your scheme.");\
   XCTAssertTrue((suffixes__.count > 0), @"Suffixes set cannot be empty %@", suffixes__); \
   \
-  BOOL testSuccess__ = NO; \
   NSError *error__ = nil; \
-  NSMutableArray *errors__ = [NSMutableArray array]; \
   \
   if (self.recordMode) { \
     \
     NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", referenceImageDirectory, suffixes__.firstObject]; \
-    BOOL referenceImageSaved__ = [self compareSnapshotOf ## what__ :(viewOrLayer__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) tolerance:(tolerance__) error:&error__]; \
+    BOOL referenceImageSaved__ = [self compareSnapshotOf ## what__ :(viewLayerOrImage__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) tolerance:(tolerance__) error:&error__]; \
     if (!referenceImageSaved__) { \
       [errors__ addObject:error__]; \
     } \
@@ -95,10 +105,10 @@ FBSnapshotVerifyLayerWithOptions(image__, identifier__, FBSnapshotTestCaseDefaul
     \
     for (NSString *suffix__ in suffixes__) { \
       NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", referenceImageDirectory, suffix__]; \
-      BOOL referenceImageAvailable = [self referenceImageRecordedInDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
+      BOOL referenceImageAvailable = [self referenceImageRecordedInDirectory:referenceImagesDirectory__ identifier:(identifier__) scale:[self scaleOfViewLayerOrImage:viewLayerOrImage__] error:&error__]; \
       \
       if (referenceImageAvailable) { \
-        BOOL comparisonSuccess__ = [self compareSnapshotOf ## what__ :(viewOrLayer__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) tolerance:(tolerance__) error:&error__]; \
+        BOOL comparisonSuccess__ = [self compareSnapshotOf ## what__ :(viewLayerOrImage__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) tolerance:(tolerance__) error:&error__]; \
         [errors__ removeAllObjects]; \
         if (comparisonSuccess__) { \
           testSuccess__ = YES; \
@@ -111,8 +121,6 @@ FBSnapshotVerifyLayerWithOptions(image__, identifier__, FBSnapshotTestCaseDefaul
       } \
     } \
   } \
-  XCTAssertTrue(testSuccess__, @"Snapshot comparison failed: %@", errors__.firstObject); \
-  XCTAssertFalse(self.recordMode, @"Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!"); \
 }
 
 
