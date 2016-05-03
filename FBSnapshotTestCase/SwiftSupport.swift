@@ -10,14 +10,18 @@
 
 public extension FBSnapshotTestCase {
   public func FBSnapshotVerifyView(view: UIView, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
-    FBSnapshotVerifyViewOrLayer(view, identifier: identifier, suffixes: suffixes, tolerance: tolerance, file: file, line: line)
+    FBSnapshotVerifyViewLayerOrImage(view, identifier: identifier, suffixes: suffixes, tolerance: tolerance, file: file, line: line)
   }
 
   public func FBSnapshotVerifyLayer(layer: CALayer, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
-    FBSnapshotVerifyViewOrLayer(layer, identifier: identifier, suffixes: suffixes, tolerance: tolerance, file: file, line: line)
+    FBSnapshotVerifyViewLayerOrImage(layer, identifier: identifier, suffixes: suffixes, tolerance: tolerance, file: file, line: line)
   }
 
-  private func FBSnapshotVerifyViewOrLayer(viewOrLayer: AnyObject, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
+  public func FBSnapshotVerifyImage(image: UIImage, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
+    FBSnapshotVerifyViewLayerOrImage(image, identifier: identifier, suffixes: suffixes, tolerance: tolerance, file: file, line: line)
+  }
+  
+  private func FBSnapshotVerifyViewLayerOrImage(viewOrLayer: AnyObject, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
     let envReferenceImageDirectory = self.getReferenceImageDirectoryWithDefault(FB_REFERENCE_IMAGE_DIR)
     var error: NSError?
     var comparisonSuccess = false
@@ -41,8 +45,16 @@ public extension FBSnapshotTestCase {
             error = error1
             comparisonSuccess = false
           }
+        } else if viewOrLayer.isKindOfClass(UIImage) {
+          do {
+            try compareSnapshotOfImage(viewOrLayer as! UIImage, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
+            comparisonSuccess = true
+          } catch let error1 as NSError {
+            error = error1
+            comparisonSuccess = false
+          }
         } else {
-          assertionFailure("Only UIView and CALayer classes can be snapshotted")
+          assertionFailure("Only UIView, CALayer or UIImage classes can be snapshotted")
         }
 
         assert(recordMode == false, message: "Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!", file: file, line: line)
