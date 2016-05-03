@@ -100,6 +100,29 @@
   XCTAssertEqual(firstError.code, 4);
 }
 
+- (void)testVerifyImage
+{
+    UIImage *sqareWithText = [self _bundledImageNamed:@"square_with_text" type:@"png"];
+    FBSnapshotVerifyImage(sqareWithText, @"testVerifyImage")
+}
+
+- (void)testVerifyImageWithNonMatchingImage
+{
+  UIImage *image = [self _bundledImageNamed:@"square_with_text" type:@"png"];
+  if (self.recordMode) {
+    image = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
+  }
+  
+  TestableFBSnapshotVerifyViewLayerOrImage(Image, image, @"testVerifyImageWithWrongImage")
+  
+  XCTAssertFalse(testSuccess__);
+  NSError *firstError = errors__.firstObject;
+  XCTAssertNotNil(firstError);
+  XCTAssertEqualObjects(firstError.domain, @"FBSnapshotTestControllerErrorDomain");
+  XCTAssertEqual(firstError.code, 4);
+}
+
+
 #pragma mark - Private helper methods
 
 - (UIView *)createTestViewWithSubViewColor:(UIColor *)subViewColor
