@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.license      = 'BSD'
   s.author       = 'Facebook'
   s.source       = { :git => "https://github.com/gabrielar/ios-snapshot-test-case.git",
-                     :tag => s.version.to_s }
+                     :tag => "Gabriel_${s.version.to_s}" }
   s.platform     = :ios, '7.0'
   s.requires_arc = true
   s.frameworks    = 'XCTest','UIKit','Foundation','QuartzCore'
