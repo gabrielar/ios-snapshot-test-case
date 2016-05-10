@@ -1,9 +1,10 @@
 framework module GDRSSnapshotTestCase {
-  umbrella header "FBSnapshotTestCase.h"
+  umbrella header "GDRSSnapshotTestCase.h"
 
   export *
   module * { export * }
 
+  header "GDRSSnapshotTestCase.h"
   header "FBSnapshotTestCase.h"
   header "FBSnapshotTestCasePlatform.h"
   header "FBSnapshotTestController.h"

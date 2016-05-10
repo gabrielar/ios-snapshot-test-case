@@ -8,6 +8,7 @@
  *
  */
 
+#import "GDRSSnapshotTestCase.h"
 #import "FBSnapshotTestCasePlatform.h"
 #import "FBSnapshotTestController.h"
 
