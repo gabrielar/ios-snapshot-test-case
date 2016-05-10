@@ -71,18 +71,20 @@ extern NSString *const FBDiffedImageKey;
  */
 @property (readwrite, nonatomic, copy) NSString *referenceImagesDirectory;
 
+@property (nonatomic, readonly) NSInvocation *invocation;
+
 /**
  @param testClass The subclass of FBSnapshotTestCase that is using this controller.
  @returns An instance of FBSnapshotTestController.
  */
-- (instancetype)initWithTestClass:(Class)testClass;
+- (instancetype)initWithTestClass:(Class)testClass invocation:(NSInvocation *)invocation;
 
 /**
  Designated initializer.
  @param testName The name of the tests.
  @returns An instance of FBSnapshotTestController.
  */
-- (instancetype)initWithTestName:(NSString *)testName;
+- (instancetype)initWithTestName:(NSString *)testName invocation:(NSInvocation *)invocation;
 
 /**
  Performs the comparison of the layer.

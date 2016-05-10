@@ -29,6 +29,11 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
   FBTestSnapshotFileNameTypeFailedTestDiff,
 };
 
+
+@interface FBSnapshotTestController()
+@property (nonatomic) NSInvocation *invocation;
+@end
+
 @implementation FBSnapshotTestController
 {
   NSString *_testName;
@@ -37,15 +42,16 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 #pragma mark - Initializers
 
-- (instancetype)initWithTestClass:(Class)testClass;
+- (instancetype)initWithTestClass:(Class)testClass invocation:(NSInvocation *)invocation;
 {
-  return [self initWithTestName:NSStringFromClass(testClass)];
+  return [self initWithTestName:NSStringFromClass(testClass) invocation:invocation];
 }
 
-- (instancetype)initWithTestName:(NSString *)testName
+- (instancetype)initWithTestName:(NSString *)testName invocation:(NSInvocation *)invocation
 {
   if (self = [super init]) {
     _testName = [testName copy];
+    self.invocation = invocation;
     _deviceAgnostic = NO;
     
     _fileManager = [[NSFileManager alloc] init];
