@@ -8,8 +8,8 @@
  *
  */
 
-#import <FBSnapshotTestCase/FBSnapshotTestCase.h>
-#import <FBSnapshotTestCase/FBSnapshotTestController.h>
+#import "FBSnapshotTestCase.h"
+#import "FBSnapshotTestController.h"
 
 #import <objc/runtime.h>
 
