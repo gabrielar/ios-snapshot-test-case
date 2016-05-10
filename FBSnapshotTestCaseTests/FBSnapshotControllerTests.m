@@ -27,7 +27,7 @@
     UIImage *testImage = [self _bundledImageNamed:@"square-copy" type:@"png"];
     XCTAssertNotNil(testImage);
 
-    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil];
+    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil invocation:nil];
     NSError *error = nil;
     XCTAssertTrue([controller compareReferenceImage:referenceImage toImage:testImage tolerance:0 error:&error]);
     XCTAssertNil(error);
@@ -40,7 +40,7 @@
     UIImage *testImage = [self _bundledImageNamed:@"square_with_text" type:@"png"];
     XCTAssertNotNil(testImage);
 
-    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil];
+    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil invocation:nil];
     NSError *error = nil;
     XCTAssertFalse([controller compareReferenceImage:referenceImage toImage:testImage tolerance:0 error:&error]);
     XCTAssertNotNil(error);
@@ -54,7 +54,7 @@
     UIImage *testImage = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
     XCTAssertNotNil(testImage);
 
-    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil];
+    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil invocation:nil];
     // With virtually no margin for error, this should fail to be equal
     NSError *error = nil;
     XCTAssertFalse([controller compareReferenceImage:referenceImage toImage:testImage tolerance:0.0001 error:&error]);
@@ -69,7 +69,7 @@
     UIImage *testImage = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
     XCTAssertNotNil(testImage);
 
-    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil];
+    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil invocation:nil];
     // With some tolerance these should be considered the same
     NSError *error = nil;
     XCTAssertTrue([controller compareReferenceImage:referenceImage toImage:testImage tolerance:.001 error:&error]);
@@ -83,7 +83,7 @@
   UIImage *testImage = [self _bundledImageNamed:@"rect" type:@"png"];
   XCTAssertNotNil(testImage);
   
-  FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil];
+  FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil invocation:nil];
   // With some tolerance these should be considered the same
   NSError *error = nil;
   XCTAssertFalse([controller compareReferenceImage:referenceImage toImage:testImage tolerance:0 error:&error]);
@@ -98,7 +98,7 @@
   UIImage *testImage = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
   XCTAssertNotNil(testImage);
   
-  FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil];
+  FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:nil invocation:nil];
   [controller setDeviceAgnostic:YES];
   [controller setReferenceImagesDirectory:@"/dev/null/"];
   NSError *error = nil;
