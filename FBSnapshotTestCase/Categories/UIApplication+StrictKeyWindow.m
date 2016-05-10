@@ -8,7 +8,7 @@
  *
  */
 
-#import <FBSnapshotTestCase/UIApplication+StrictKeyWindow.h>
+#import "UIApplication+StrictKeyWindow.h"
 
 @implementation UIApplication (StrictKeyWindow)
 
