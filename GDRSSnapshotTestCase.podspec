@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = "FBSnapshotTestCase"
+  s.name         = "GDRSSnapshotTestCase"
   s.version      = "2.1.0"
   s.summary      = "Snapshot view unit tests for iOS"
   s.description  = <<-DESC
@@ -19,15 +19,15 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.frameworks    = 'XCTest','UIKit','Foundation','QuartzCore'
   s.pod_target_xcconfig = { 'ENABLE_BITCODE' => 'NO' }
-  s.default_subspecs = 'SwiftSupport'
-  s.module_map = 'FBSnapshotTestCase.modulemap'
+#   s.default_subspecs = 'SwiftSupport'
+#   s.module_map = 'GDRSSnapshotTestCase.modulemap'
   s.subspec 'Core' do |cs|
     cs.source_files = 'FBSnapshotTestCase/**/*.{h,m}', 'FBSnapshotTestCase/*.{h,m}'
     cs.public_header_files = 'FBSnapshotTestCase/FBSnapshotTestCase.h','FBSnapshotTestCase/FBSnapshotTestCasePlatform.h','FBSnapshotTestCase/FBSnapshotTestController.h'
     cs.private_header_files = 'FBSnapshotTestCase/Categories/UIImage+Compare.h','FBSnapshotTestCase/Categories/UIImage+Diff.h','FBSnapshotTestCase/Categories/UIImage+Snapshot.h'
   end
-  s.subspec 'SwiftSupport' do |cs|
-    cs.dependency 'FBSnapshotTestCase/Core'
-    cs.source_files = 'FBSnapshotTestCase/**/*.swift'
-  end
+#   s.subspec 'SwiftSupport' do |cs|
+#     cs.dependency 'GDRSSnapshotTestCase/Core'
+#     cs.source_files = 'FBSnapshotTestCase/**/*.swift'
+#   end
 end
