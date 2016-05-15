@@ -8,8 +8,8 @@
  *
  */
 
-#import <FBSnapshotTestCase/UIImage+Snapshot.h>
-#import <FBSnapshotTestCase/UIApplication+StrictKeyWindow.h>
+#import "UIImage+Snapshot.h"
+#import "UIApplication+StrictKeyWindow.h"
 
 @implementation UIImage (Snapshot)
 

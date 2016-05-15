@@ -8,8 +8,8 @@
  *
  */
 
-#import <FBSnapshotTestCase/FBSnapshotTestCasePlatform.h>
-#import <FBSnapshotTestCase/UIApplication+StrictKeyWindow.h>
+#import "FBSnapshotTestCasePlatform.h"
+#import "UIApplication+StrictKeyWindow.h"
 #import <UIKit/UIKit.h>
 
 BOOL FBSnapshotTestCaseIs64Bit(void)

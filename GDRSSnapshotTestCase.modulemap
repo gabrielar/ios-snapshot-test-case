@@ -1,9 +1,10 @@
-framework module FBSnapshotTestCase {
-  umbrella header "FBSnapshotTestCase.h"
+framework module GDRSSnapshotTestCase {
+  umbrella header "GDRSSnapshotTestCase.h"
 
   export *
   module * { export * }
 
+  header "GDRSSnapshotTestCase.h"
   header "FBSnapshotTestCase.h"
   header "FBSnapshotTestCasePlatform.h"
   header "FBSnapshotTestController.h"
