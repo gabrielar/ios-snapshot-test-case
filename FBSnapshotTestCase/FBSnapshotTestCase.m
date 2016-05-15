@@ -11,97 +11,98 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <FBSnapshotTestCase/FBSnapshotTestController.h>
 
-@implementation FBSnapshotTestCase
+#import <objc/runtime.h>
+
+
+@implementation XCTestCase (FBSnapshotTestCase)
+
+@dynamic __FBSnapshotTestCase__snapshotController;
+
+
+static char __FBSnapshotTestCase__snapshotControllerKey[] = "__FBSnapshotTestCase__snapshotController";
+
+- (void)__FBSnapshotTestCase__setSnapshotController:(FBSnapshotTestController *)snapshotController
 {
-  FBSnapshotTestController *_snapshotController;
+  objc_setAssociatedObject(self,
+                           __FBSnapshotTestCase__snapshotControllerKey,
+                           snapshotController,
+                           OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-#pragma mark - Overrides
-
-- (void)setUp
+- (FBSnapshotTestController *)__FBSnapshotTestCase__snapshotController
 {
-  [super setUp];
-  _snapshotController = [[FBSnapshotTestController alloc] initWithTestName:NSStringFromClass([self class])];
+  
+  FBSnapshotTestController *sc = objc_getAssociatedObject(self, __FBSnapshotTestCase__snapshotControllerKey);
+  if (!sc || (sc.invocation != self.invocation)) {
+    sc = [[FBSnapshotTestController alloc] initWithTestName:NSStringFromClass([self class])
+                                                 invocation:self.invocation];
+    [self __FBSnapshotTestCase__setSnapshotController: sc];
+  }
+  
+  return sc;
+  
 }
 
-- (void)tearDown
-{
-  _snapshotController = nil;
-  [super tearDown];
-}
-
-- (BOOL)recordMode
-{
-  return _snapshotController.recordMode;
-}
-
-- (void)setRecordMode:(BOOL)recordMode
-{
-  NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
-  _snapshotController.recordMode = recordMode;
-}
-
-- (BOOL)isDeviceAgnostic
-{
-  return _snapshotController.deviceAgnostic;
-}
-
-- (void)setDeviceAgnostic:(BOOL)deviceAgnostic
-{
-  NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
-  _snapshotController.deviceAgnostic = deviceAgnostic;
-}
-
-- (BOOL)usesDrawViewHierarchyInRect
-{
-  return _snapshotController.usesDrawViewHierarchyInRect;
-}
-
-- (void)setUsesDrawViewHierarchyInRect:(BOOL)usesDrawViewHierarchyInRect
-{
-  NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
-  _snapshotController.usesDrawViewHierarchyInRect = usesDrawViewHierarchyInRect;
-}
 
 #pragma mark - Public API
 
-- (BOOL)compareSnapshotOfLayer:(CALayer *)layer
-      referenceImagesDirectory:(NSString *)referenceImagesDirectory
-                    identifier:(NSString *)identifier
-                     tolerance:(CGFloat)tolerance
-                         error:(NSError **)errorPtr
+- (BOOL)__FBSnapshotTestCase__compareSnapshotOfLayer:(CALayer *)layer
+                            referenceImagesDirectory:(NSString *)referenceImagesDirectory
+                                          identifier:(NSString *)identifier
+                                           tolerance:(CGFloat)tolerance
+                                               error:(NSError **)errorPtr
 {
-  return [self _compareSnapshotOfViewOrLayer:layer
-                    referenceImagesDirectory:referenceImagesDirectory
-                                  identifier:identifier
-                                   tolerance:tolerance
-                                       error:errorPtr];
+  return [self __FBSnapshotTestCase__compareSnapshotOfViewLayerOrImage:layer
+                                              referenceImagesDirectory:referenceImagesDirectory
+                                                            identifier:identifier
+                                                             tolerance:tolerance
+                                                                 error:errorPtr];
 }
 
-- (BOOL)compareSnapshotOfView:(UIView *)view
-     referenceImagesDirectory:(NSString *)referenceImagesDirectory
-                   identifier:(NSString *)identifier
-                    tolerance:(CGFloat)tolerance
-                        error:(NSError **)errorPtr
+- (BOOL)__FBSnapshotTestCase__compareSnapshotOfView:(UIView *)view
+                           referenceImagesDirectory:(NSString *)referenceImagesDirectory
+                                         identifier:(NSString *)identifier
+                                          tolerance:(CGFloat)tolerance
+                                              error:(NSError **)errorPtr
 {
-  return [self _compareSnapshotOfViewOrLayer:view
-                    referenceImagesDirectory:referenceImagesDirectory
-                                  identifier:identifier
-                                   tolerance:tolerance
-                                       error:errorPtr];
+  return [self __FBSnapshotTestCase__compareSnapshotOfViewLayerOrImage:view
+                                              referenceImagesDirectory:referenceImagesDirectory
+                                                            identifier:identifier
+                                                             tolerance:tolerance
+                                                                 error:errorPtr];
 }
 
-- (BOOL)referenceImageRecordedInDirectory:(NSString *)referenceImagesDirectory
-                               identifier:(NSString *)identifier
-                                    error:(NSError **)errorPtr
+- (BOOL)__FBSnapshotTestCase__compareSnapshotOfImage:(UIImage *)image
+                            referenceImagesDirectory:(NSString *)referenceImagesDirectory
+                                          identifier:(NSString *)identifier
+                                           tolerance:(CGFloat)tolerance
+                                               error:(NSError **)errorPtr
 {
-    NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
-    _snapshotController.referenceImagesDirectory = referenceImagesDirectory;
-    UIImage *referenceImage = [_snapshotController referenceImageForSelector:self.invocation.selector
-                                                                  identifier:identifier
-                                                                       error:errorPtr];
+  return [self __FBSnapshotTestCase__compareSnapshotOfViewLayerOrImage:image
+                                              referenceImagesDirectory:referenceImagesDirectory
+                                                            identifier:identifier
+                                                             tolerance:tolerance
+                                                                 error:errorPtr];
+}
 
-    return (referenceImage != nil);
+- (BOOL)__FBSnapshotTestCase__referenceImageRecordedInDirectory:(NSString *)referenceImagesDirectory
+                                                     identifier:(NSString *)identifier
+                                                          scale:(CGFloat)scale
+                                                          error:(NSError **)errorPtr
+{
+  NSAssert1(self.__FBSnapshotTestCase__snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
+  self.__FBSnapshotTestCase__snapshotController.referenceImagesDirectory = referenceImagesDirectory;
+  UIImage *referenceImage = [self.__FBSnapshotTestCase__snapshotController referenceImageForSelector:self.invocation.selector
+                                                                                          identifier:identifier
+                                                                                               scale:scale
+                                                                                               error:errorPtr];
+  
+  return (referenceImage != nil);
+}
+
+- (CGFloat)__FBSnapshotTestCase__scaleOfViewLayerOrImage:(id)viewLayerOrImage
+{
+  return [self.__FBSnapshotTestCase__snapshotController scaleOfViewLayerOrImage:viewLayerOrImage];
 }
 
 - (NSString *)getReferenceImageDirectoryWithDefault:(NSString *)dir
@@ -119,18 +120,59 @@
 
 #pragma mark - Private API
 
-- (BOOL)_compareSnapshotOfViewOrLayer:(id)viewOrLayer
-             referenceImagesDirectory:(NSString *)referenceImagesDirectory
-                           identifier:(NSString *)identifier
-                            tolerance:(CGFloat)tolerance
-                                error:(NSError **)errorPtr
+- (BOOL)__FBSnapshotTestCase__compareSnapshotOfViewLayerOrImage:(id)viewLayerOrImage
+                                       referenceImagesDirectory:(NSString *)referenceImagesDirectory
+                                                     identifier:(NSString *)identifier
+                                                      tolerance:(CGFloat)tolerance
+                                                          error:(NSError **)errorPtr
 {
-  _snapshotController.referenceImagesDirectory = referenceImagesDirectory;
-  return [_snapshotController compareSnapshotOfViewOrLayer:viewOrLayer
-                                                  selector:self.invocation.selector
-                                                identifier:identifier
-                                                 tolerance:tolerance
-                                                     error:errorPtr];
+  self.__FBSnapshotTestCase__snapshotController.referenceImagesDirectory = referenceImagesDirectory;
+  return [self.__FBSnapshotTestCase__snapshotController compareSnapshotOfViewLayerOrImage:viewLayerOrImage
+                                                                                 selector:self.invocation.selector
+                                                                               identifier:identifier
+                                                                                tolerance:tolerance
+                                                                                    error:errorPtr];
+}
+
+
+@end
+
+
+@implementation FBSnapshotTestCase
+
+#pragma mark - Overrides
+
+- (BOOL)recordMode
+{
+  return self.__FBSnapshotTestCase__snapshotController.recordMode;
+}
+
+- (void)setRecordMode:(BOOL)recordMode
+{
+  NSAssert1(self.__FBSnapshotTestCase__snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
+  self.__FBSnapshotTestCase__snapshotController.recordMode = recordMode;
+}
+
+- (BOOL)isDeviceAgnostic
+{
+  return self.__FBSnapshotTestCase__snapshotController.deviceAgnostic;
+}
+
+- (void)setDeviceAgnostic:(BOOL)deviceAgnostic
+{
+  NSAssert1(self.__FBSnapshotTestCase__snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
+  self.__FBSnapshotTestCase__snapshotController.deviceAgnostic = deviceAgnostic;
+}
+
+- (BOOL)usesDrawViewHierarchyInRect
+{
+  return self.__FBSnapshotTestCase__snapshotController.usesDrawViewHierarchyInRect;
+}
+
+- (void)setUsesDrawViewHierarchyInRect:(BOOL)usesDrawViewHierarchyInRect
+{
+  NSAssert1(self.__FBSnapshotTestCase__snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
+  self.__FBSnapshotTestCase__snapshotController.usesDrawViewHierarchyInRect = usesDrawViewHierarchyInRect;
 }
 
 @end

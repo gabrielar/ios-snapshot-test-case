@@ -29,6 +29,11 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
   FBTestSnapshotFileNameTypeFailedTestDiff,
 };
 
+
+@interface FBSnapshotTestController()
+@property (nonatomic) NSInvocation *invocation;
+@end
+
 @implementation FBSnapshotTestController
 {
   NSString *_testName;
@@ -37,15 +42,16 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 #pragma mark - Initializers
 
-- (instancetype)initWithTestClass:(Class)testClass;
+- (instancetype)initWithTestClass:(Class)testClass invocation:(NSInvocation *)invocation;
 {
-  return [self initWithTestName:NSStringFromClass(testClass)];
+  return [self initWithTestName:NSStringFromClass(testClass) invocation:invocation];
 }
 
-- (instancetype)initWithTestName:(NSString *)testName
+- (instancetype)initWithTestName:(NSString *)testName invocation:(NSInvocation *)invocation
 {
   if (self = [super init]) {
     _testName = [testName copy];
+    self.invocation = invocation;
     _deviceAgnostic = NO;
     
     _fileManager = [[NSFileManager alloc] init];
@@ -67,11 +73,11 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
                     identifier:(NSString *)identifier
                          error:(NSError **)errorPtr
 {
-  return [self compareSnapshotOfViewOrLayer:layer
-                                   selector:selector
-                                 identifier:identifier
-                                  tolerance:0
-                                      error:errorPtr];
+  return [self compareSnapshotOfViewLayerOrImage:layer
+                                        selector:selector
+                                      identifier:identifier
+                                       tolerance:0
+                                           error:errorPtr];
 }
 
 - (BOOL)compareSnapshotOfView:(UIView *)view
@@ -79,31 +85,62 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
                    identifier:(NSString *)identifier
                         error:(NSError **)errorPtr
 {
-  return [self compareSnapshotOfViewOrLayer:view
-                                   selector:selector
-                                 identifier:identifier
-                                  tolerance:0
-                                      error:errorPtr];
+  return [self compareSnapshotOfViewLayerOrImage:view
+                                        selector:selector
+                                      identifier:identifier
+                                       tolerance:0
+                                           error:errorPtr];
 }
 
-- (BOOL)compareSnapshotOfViewOrLayer:(id)viewOrLayer
-                            selector:(SEL)selector
-                          identifier:(NSString *)identifier
-                           tolerance:(CGFloat)tolerance
-                               error:(NSError **)errorPtr
+- (BOOL)compareSnapshotOfImage:(UIImage *)image
+                      selector:(SEL)selector
+                    identifier:(NSString *)identifier
+                         error:(NSError **)errorPtr
+{
+  return [self compareSnapshotOfViewLayerOrImage:image
+                                        selector:selector
+                                      identifier:identifier
+                                       tolerance:0
+                                           error:errorPtr];
+}
+
+- (BOOL)compareSnapshotOfViewLayerOrImage:(id)viewLayerOrImage
+                                 selector:(SEL)selector
+                               identifier:(NSString *)identifier
+                                tolerance:(CGFloat)tolerance
+                                    error:(NSError **)errorPtr
 {
   if (self.recordMode) {
-    return [self _recordSnapshotOfViewOrLayer:viewOrLayer selector:selector identifier:identifier error:errorPtr];
+    return [self _recordSnapshotOfViewLayerOrImage:viewLayerOrImage selector:selector identifier:identifier error:errorPtr];
   } else {
-    return [self _performPixelComparisonWithViewOrLayer:viewOrLayer selector:selector identifier:identifier tolerance:tolerance error:errorPtr];
+    return [self _performPixelComparisonWithViewLayerOrImage:viewLayerOrImage selector:selector identifier:identifier tolerance:tolerance error:errorPtr];
   }
+}
+
+- (CGFloat)scaleOfViewLayerOrImage:(id)viewLayerOrImage
+{
+  if ([viewLayerOrImage isKindOfClass:[UIImage class]]) {
+    return ((UIImage* )viewLayerOrImage).scale;
+  }
+  return [UIScreen mainScreen].scale;
 }
 
 - (UIImage *)referenceImageForSelector:(SEL)selector
                             identifier:(NSString *)identifier
                                  error:(NSError **)errorPtr
 {
-  NSString *filePath = [self _referenceFilePathForSelector:selector identifier:identifier];
+  return [self referenceImageForSelector:selector
+                              identifier:identifier
+                                   scale:[UIScreen mainScreen].scale
+                                   error:errorPtr];
+}
+
+- (UIImage *)referenceImageForSelector:(SEL)selector
+                            identifier:(NSString *)identifier
+                                 scale:(CGFloat)scale
+                                 error:(NSError **)errorPtr
+{
+  NSString *filePath = [self _referenceFilePathForSelector:selector identifier:identifier scale:scale];
   UIImage *image = [UIImage imageWithContentsOfFile:filePath];
   if (nil == image && NULL != errorPtr) {
     BOOL exists = [_fileManager fileExistsAtPath:filePath];
@@ -164,6 +201,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
   NSString *referencePath = [self _failedFilePathForSelector:selector
                                                   identifier:identifier
+                                                       scale:referenceImage.scale
                                                 fileNameType:FBTestSnapshotFileNameTypeFailedReference];
 
   NSError *creationError = nil;
@@ -184,18 +222,20 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
   NSString *testPath = [self _failedFilePathForSelector:selector
                                              identifier:identifier
+                                                  scale:testImage.scale
                                            fileNameType:FBTestSnapshotFileNameTypeFailedTest];
 
   if (![testPNGData writeToFile:testPath options:NSDataWritingAtomic error:errorPtr]) {
     return NO;
   }
 
-  NSString *diffPath = [self _failedFilePathForSelector:selector
-                                             identifier:identifier
-                                           fileNameType:FBTestSnapshotFileNameTypeFailedTestDiff];
-
   UIImage *diffImage = [referenceImage fb_diffWithImage:testImage];
   NSData *diffImageData = UIImagePNGRepresentation(diffImage);
+  
+  NSString *diffPath = [self _failedFilePathForSelector:selector
+                                             identifier:identifier
+                                                  scale:diffImage.scale
+                                           fileNameType:FBTestSnapshotFileNameTypeFailedTestDiff];
 
   if (![diffImageData writeToFile:diffPath options:NSDataWritingAtomic error:errorPtr]) {
     return NO;
@@ -211,6 +251,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (NSString *)_fileNameForSelector:(SEL)selector
                         identifier:(NSString *)identifier
+                             scale:(CGFloat)scale
                       fileNameType:(FBTestSnapshotFileNameType)fileNameType
 {
   NSString *fileName = nil;
@@ -237,8 +278,11 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
     fileName = FBDeviceAgnosticNormalizedFileName(fileName);
   }
   
-  if ([[UIScreen mainScreen] scale] > 1) {
-    fileName = [fileName stringByAppendingFormat:@"@%.fx", [[UIScreen mainScreen] scale]];
+  if (scale < 0.2) {
+    scale = [[UIScreen mainScreen] scale];
+  }
+  if (scale > 1) {
+    fileName = [fileName stringByAppendingFormat:@"@%.fx", scale];
   }
   fileName = [fileName stringByAppendingPathExtension:@"png"];
   return fileName;
@@ -246,9 +290,11 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (NSString *)_referenceFilePathForSelector:(SEL)selector
                                  identifier:(NSString *)identifier
+                                      scale:(CGFloat)scale
 {
   NSString *fileName = [self _fileNameForSelector:selector
                                        identifier:identifier
+                                            scale:scale
                                      fileNameType:FBTestSnapshotFileNameTypeReference];
   NSString *filePath = [_referenceImagesDirectory stringByAppendingPathComponent:_testName];
   filePath = [filePath stringByAppendingPathComponent:fileName];
@@ -257,10 +303,12 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (NSString *)_failedFilePathForSelector:(SEL)selector
                               identifier:(NSString *)identifier
+                                   scale:(CGFloat)scale
                             fileNameType:(FBTestSnapshotFileNameType)fileNameType
 {
   NSString *fileName = [self _fileNameForSelector:selector
                                        identifier:identifier
+                                            scale:scale
                                      fileNameType:fileNameType];
   NSString *folderPath = NSTemporaryDirectory();
   if (getenv("IMAGE_DIFF_DIR")) {
@@ -271,15 +319,18 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
   return filePath;
 }
 
-- (BOOL)_performPixelComparisonWithViewOrLayer:(id)viewOrLayer
-                                      selector:(SEL)selector
-                                    identifier:(NSString *)identifier
-                                     tolerance:(CGFloat)tolerance
-                                         error:(NSError **)errorPtr
+- (BOOL)_performPixelComparisonWithViewLayerOrImage:(id)viewLayerOrImage
+                                           selector:(SEL)selector
+                                         identifier:(NSString *)identifier
+                                          tolerance:(CGFloat)tolerance
+                                              error:(NSError **)errorPtr
 {
-  UIImage *referenceImage = [self referenceImageForSelector:selector identifier:identifier error:errorPtr];
+  UIImage *referenceImage = [self referenceImageForSelector:selector
+                                                 identifier:identifier
+                                                      scale:[self scaleOfViewLayerOrImage:viewLayerOrImage]
+                                                      error:errorPtr];
   if (nil != referenceImage) {
-    UIImage *snapshot = [self _imageForViewOrLayer:viewOrLayer];
+    UIImage *snapshot = [self _imageForViewLayerOrImage:viewLayerOrImage];
     BOOL imagesSame = [self compareReferenceImage:referenceImage toImage:snapshot tolerance:tolerance error:errorPtr];
     if (!imagesSame) {
       NSError *saveError = nil;
@@ -292,12 +343,12 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
   return NO;
 }
 
-- (BOOL)_recordSnapshotOfViewOrLayer:(id)viewOrLayer
-                            selector:(SEL)selector
-                          identifier:(NSString *)identifier
-                               error:(NSError **)errorPtr
+- (BOOL)_recordSnapshotOfViewLayerOrImage:(id)viewLayerOrImage
+                                 selector:(SEL)selector
+                               identifier:(NSString *)identifier
+                                    error:(NSError **)errorPtr
 {
-  UIImage *snapshot = [self _imageForViewOrLayer:viewOrLayer];
+  UIImage *snapshot = [self _imageForViewLayerOrImage:viewLayerOrImage];
   return [self _saveReferenceImage:snapshot selector:selector identifier:identifier error:errorPtr];
 }
 
@@ -308,7 +359,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 {
   BOOL didWrite = NO;
   if (nil != image) {
-    NSString *filePath = [self _referenceFilePathForSelector:selector identifier:identifier];
+    NSString *filePath = [self _referenceFilePathForSelector:selector identifier:identifier scale:image.scale];
     NSData *pngData = UIImagePNGRepresentation(image);
     if (nil != pngData) {
       NSError *creationError = nil;
@@ -339,18 +390,20 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
   return didWrite;
 }
 
-- (UIImage *)_imageForViewOrLayer:(id)viewOrLayer
+- (UIImage *)_imageForViewLayerOrImage:(id)viewLayerOrImage
 {
-  if ([viewOrLayer isKindOfClass:[UIView class]]) {
+  if ([viewLayerOrImage isKindOfClass:[UIView class]]) {
     if (_usesDrawViewHierarchyInRect) {
-      return [UIImage fb_imageForView:viewOrLayer];
+      return [UIImage fb_imageForView:viewLayerOrImage];
     } else {
-      return [UIImage fb_imageForViewLayer:viewOrLayer];
+      return [UIImage fb_imageForViewLayer:viewLayerOrImage];
     }
-  } else if ([viewOrLayer isKindOfClass:[CALayer class]]) {
-    return [UIImage fb_imageForLayer:viewOrLayer];
+  } else if ([viewLayerOrImage isKindOfClass:[CALayer class]]) {
+    return [UIImage fb_imageForLayer:viewLayerOrImage];
+  } else if ([viewLayerOrImage isKindOfClass:[UIImage class]]) {
+    return viewLayerOrImage;
   } else {
-    [NSException raise:@"Only UIView and CALayer classes can be snapshotted" format:@"%@", viewOrLayer];
+    [NSException raise:@"Only UIView and CALayer classes can be snapshotted" format:@"%@", viewLayerOrImage];
   }
   return nil;
 }

@@ -71,18 +71,20 @@ extern NSString *const FBDiffedImageKey;
  */
 @property (readwrite, nonatomic, copy) NSString *referenceImagesDirectory;
 
+@property (nonatomic, readonly) NSInvocation *invocation;
+
 /**
  @param testClass The subclass of FBSnapshotTestCase that is using this controller.
  @returns An instance of FBSnapshotTestController.
  */
-- (instancetype)initWithTestClass:(Class)testClass;
+- (instancetype)initWithTestClass:(Class)testClass invocation:(NSInvocation *)invocation;
 
 /**
  Designated initializer.
  @param testName The name of the tests.
  @returns An instance of FBSnapshotTestController.
  */
-- (instancetype)initWithTestName:(NSString *)testName;
+- (instancetype)initWithTestName:(NSString *)testName invocation:(NSInvocation *)invocation;
 
 /**
  Performs the comparison of the layer.
@@ -111,19 +113,34 @@ extern NSString *const FBDiffedImageKey;
                         error:(NSError **)errorPtr;
 
 /**
+ Performs the comparison of the view.
+ @param image The image to snapshot.
+ @param selector The test method being run.
+ @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
+ @param error An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
+ @returns YES if the comparison (or saving of the reference image) succeeded.
+ */
+- (BOOL)compareSnapshotOfImage:(UIImage *)image
+                      selector:(SEL)selector
+                    identifier:(NSString *)identifier
+                         error:(NSError **)errorPtr;
+
+/**
  Performs the comparison of a view or layer.
- @param view The view or layer to snapshot.
+ @param view The view, layer or image to snapshot.
  @param selector The test method being run.
  @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
  @param tolerance The percentage of pixels that can differ and still be considered 'identical'
  @param error An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
  @returns YES if the comparison (or saving of the reference image) succeeded.
  */
-- (BOOL)compareSnapshotOfViewOrLayer:(id)viewOrLayer
-                            selector:(SEL)selector
-                          identifier:(NSString *)identifier
-                           tolerance:(CGFloat)tolerance
-                               error:(NSError **)errorPtr;
+- (BOOL)compareSnapshotOfViewLayerOrImage:(id)viewLayerOrImage
+                                 selector:(SEL)selector
+                               identifier:(NSString *)identifier
+                                tolerance:(CGFloat)tolerance
+                                    error:(NSError **)errorPtr;
+
+- (CGFloat)scaleOfViewLayerOrImage:(id)viewLayerOrImage;
 
 /**
  Loads a reference image.
@@ -135,6 +152,12 @@ extern NSString *const FBDiffedImageKey;
 - (UIImage *)referenceImageForSelector:(SEL)selector
                             identifier:(NSString *)identifier
                                  error:(NSError **)errorPtr;
+
+- (UIImage *)referenceImageForSelector:(SEL)selector
+                            identifier:(NSString *)identifier
+                                 scale:(CGFloat)scale
+                                 error:(NSError **)errorPtr;
+
 
 /**
  Performs a pixel-by-pixel comparison of the two images with an allowable margin of error.
