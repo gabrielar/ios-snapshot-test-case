@@ -15,6 +15,8 @@
 		1335641B1B59C3F500A4E4BF /* UIImage+Snapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 133564151B59C3F500A4E4BF /* UIImage+Snapshot.m */; };
 		13CBB39D1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CBB39B1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13CBB39E1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CBB39C1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.m */; };
+		7834CD101CE29A9C003B5CC2 /* GDRSSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7834CD0F1CE2996F003B5CC2 /* GDRSSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7834CD111CE29A9D003B5CC2 /* GDRSSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7834CD0F1CE2996F003B5CC2 /* GDRSSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78DD30AB1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DD30AA1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m */; };
 		78DD30AC1CD6AABD0003BCB8 /* FBSnapshotTestCaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DD30AA1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m */; };
 		827137841C63AB7000354E42 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8271377A1C63AB6F00354E42 /* FBSnapshotTestCase.framework */; };
@@ -81,6 +83,7 @@
 		133564151B59C3F500A4E4BF /* UIImage+Snapshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Snapshot.m"; sourceTree = "<group>"; };
 		13CBB39B1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSnapshotTestCasePlatform.h; sourceTree = "<group>"; };
 		13CBB39C1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSnapshotTestCasePlatform.m; sourceTree = "<group>"; };
+		7834CD0F1CE2996F003B5CC2 /* GDRSSnapshotTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GDRSSnapshotTestCase.h; sourceTree = "<group>"; };
 		78DD30AA1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSnapshotTestCaseTest.m; sourceTree = "<group>"; };
 		8271377A1C63AB6F00354E42 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		827137831C63AB7000354E42 /* FBSnapshotTestCase tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FBSnapshotTestCase tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,6 +188,7 @@
 				B31988221AB7849400B0A900 /* FBSnapshotTestController.h */,
 				B31988231AB7849400B0A900 /* FBSnapshotTestController.m */,
 				F0D698F41B204E120005CAC9 /* SwiftSupport.swift */,
+				7834CD0F1CE2996F003B5CC2 /* GDRSSnapshotTestCase.h */,
 				B31987F31AB782D000B0A900 /* Supporting Files */,
 			);
 			name = Sources;
@@ -230,6 +234,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7834CD111CE29A9D003B5CC2 /* GDRSSnapshotTestCase.h in Headers */,
 				827137941C63ABF000354E42 /* UIApplication+StrictKeyWindow.h in Headers */,
 				8271379A1C63ABF900354E42 /* FBSnapshotTestCasePlatform.h in Headers */,
 				827137911C63ABE900354E42 /* UIImage+Compare.h in Headers */,
@@ -244,10 +249,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7834CD101CE29A9C003B5CC2 /* GDRSSnapshotTestCase.h in Headers */,
+				B319882A1AB7849400B0A900 /* FBSnapshotTestController.h in Headers */,
 				BC45D5211C2AEFCE007C72F3 /* UIApplication+StrictKeyWindow.h in Headers */,
 				B31988281AB7849400B0A900 /* FBSnapshotTestCase.h in Headers */,
 				13CBB39D1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.h in Headers */,
-				B319882A1AB7849400B0A900 /* FBSnapshotTestController.h in Headers */,
 				133564181B59C3F500A4E4BF /* UIImage+Diff.h in Headers */,
 				133564161B59C3F500A4E4BF /* UIImage+Compare.h in Headers */,
 				1335641A1B59C3F500A4E4BF /* UIImage+Snapshot.h in Headers */,

@@ -11,9 +11,9 @@
 
 import XCTest
 
-public protocol FBSnapshotCapableTestCase {
+public protocol FBSnapshotCapableTestCase: class {
   
-  var BSnapshotRecordMode: Bool {set get}
+  var FBSnapshotRecordMode: Bool {set get}
   
   func FBSnapshotVerifyView(view: UIView, identifier: String, suffixes: NSOrderedSet, tolerance: CGFloat, file: StaticString, line: UInt)
   func FBSnapshotVerifyLayer(layer: CALayer, identifier: String, suffixes: NSOrderedSet, tolerance: CGFloat, file: StaticString, line: UInt)
@@ -23,7 +23,7 @@ public protocol FBSnapshotCapableTestCase {
 
 public extension FBSnapshotCapableTestCase where Self: XCTestCase {
   
-  public var BSnapshotRecordMode: Bool {
+  public var FBSnapshotRecordMode: Bool {
     set { self.__FBSnapshotTestCase__snapshotController.recordMode = newValue }
     get { return self.__FBSnapshotTestCase__snapshotController.recordMode }
   }
@@ -76,9 +76,9 @@ public extension FBSnapshotCapableTestCase where Self: XCTestCase {
           assertionFailure("Only UIView, CALayer or UIImage classes can be snapshotted")
         }
         
-        assert(self.BSnapshotRecordMode == false, message: "Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!", file: file, line: line)
+        assert(self.FBSnapshotRecordMode == false, message: "Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!", file: file, line: line)
         
-        if comparisonSuccess || self.BSnapshotRecordMode {
+        if comparisonSuccess || self.FBSnapshotRecordMode {
           break
         }
 

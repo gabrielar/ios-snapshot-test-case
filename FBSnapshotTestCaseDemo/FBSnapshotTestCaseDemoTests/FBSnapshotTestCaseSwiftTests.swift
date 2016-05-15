@@ -8,7 +8,7 @@
 *
 */
 
-import FBSnapshotTestCase
+import GDRSSnapshotTestCase
 
 class FBSnapshotTestCaseSwiftTest: FBSnapshotTestCase {
   override func setUp() {
