@@ -1,18 +1,18 @@
 PODS:
-  - FBSnapshotTestCase (2.1.0):
-    - FBSnapshotTestCase/SwiftSupport (= 2.1.0)
-  - FBSnapshotTestCase/Core (2.1.0)
-  - FBSnapshotTestCase/SwiftSupport (2.1.0):
-    - FBSnapshotTestCase/Core
+  - GDRSSnapshotTestCase (0.1.0):
+    - GDRSSnapshotTestCase/SwiftSupport (= 0.1.0)
+  - GDRSSnapshotTestCase/Core (0.1.0)
+  - GDRSSnapshotTestCase/SwiftSupport (0.1.0):
+    - GDRSSnapshotTestCase/Core
 
 DEPENDENCIES:
-  - FBSnapshotTestCase (from `..`)
+  - GDRSSnapshotTestCase (from `..`)
 
 EXTERNAL SOURCES:
-  FBSnapshotTestCase:
-    :path: ".."
+  GDRSSnapshotTestCase:
+    :path: ..
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: 366ecd378511d7716c79991cd8067d1eed23578d
+  GDRSSnapshotTestCase: 758f8d17ece557ba218bbc26e4cb636b0d0ec329
 
 COCOAPODS: 0.39.0
