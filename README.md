@@ -1,7 +1,7 @@
 FBSnapshotTestCase
 ======================
 
-[![Build Status](https://travis-ci.org/facebook/ios-snapshot-test-case.svg)](https://travis-ci.org/facebook/ios-snapshot-test-case) [![Cocoa Pod Version](https://cocoapod-badges.herokuapp.com/v/FBSnapshotTestCase/badge.svg)](http://cocoadocs.org/docsets/FBSnapshotTestCase/)
+[![Build Status](https://travis-ci.org/gabrielar/ios-snapshot-test-case.svg)](https://travis-ci.org/gabrielar/ios-snapshot-test-case)
 
 What it does
 ------------
