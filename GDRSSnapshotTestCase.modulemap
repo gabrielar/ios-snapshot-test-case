@@ -9,8 +9,5 @@ framework module GDRSSnapshotTestCase {
   header "FBSnapshotTestCasePlatform.h"
   header "FBSnapshotTestController.h"
 
-  private header "UIImage+Compare.h"
-  private header "UIImage+Diff.h"
-  private header "UIImage+Snapshot.h"
 }
 
