@@ -7,10 +7,12 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
- 
+
+#import <XCTest/XCTest.h>
 #import <GDRSSnapshotTestCase/GDRSSnapshotTestCase.h>
 
-@interface FBSnapshotTestCaseDemoTests : FBSnapshotTestCase
+
+@interface FBSnapshotTestCaseDemoTests : XCTestCase
 
 @end
 
@@ -22,7 +24,7 @@
   // Flip this to YES to record images in the reference image directory.
   // You need to do this the first time you create a test and whenever you change the snapshotted views.
   // Tests running in record mode will allways fail so that you know that you have to do something here before you commit.
-  self.recordMode = NO;
+  FBSnapshotRecordMode = NO;
 }
 
 - (void)testViewSnapshot
@@ -47,7 +49,7 @@
     [parentView addSubview:redView];
     [parentView addSubview:visualEffectView];
 
-    self.usesDrawViewHierarchyInRect = YES;
+    FBSnapshotUsesDrawViewHierarchyInRect = YES;
     FBSnapshotVerifyView(parentView, nil);
   } 
 }
@@ -59,7 +61,7 @@
   UISwitch *control = [[UISwitch alloc] init];
   control.on = YES;
   
-  self.usesDrawViewHierarchyInRect = YES;
+  FBSnapshotUsesDrawViewHierarchyInRect = YES;
   FBSnapshotVerifyView(control, nil);
 }
 
