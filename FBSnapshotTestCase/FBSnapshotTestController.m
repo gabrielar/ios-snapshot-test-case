@@ -71,36 +71,39 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 - (BOOL)compareSnapshotOfLayer:(CALayer *)layer
                       selector:(SEL)selector
                     identifier:(NSString *)identifier
+                     tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr
 {
   return [self compareSnapshotOfViewLayerOrImage:layer
                                         selector:selector
                                       identifier:identifier
-                                       tolerance:0
+                                       tolerance:tolerance
                                            error:errorPtr];
 }
 
 - (BOOL)compareSnapshotOfView:(UIView *)view
                      selector:(SEL)selector
                    identifier:(NSString *)identifier
+                    tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr
 {
   return [self compareSnapshotOfViewLayerOrImage:view
                                         selector:selector
                                       identifier:identifier
-                                       tolerance:0
+                                       tolerance:tolerance
                                            error:errorPtr];
 }
 
 - (BOOL)compareSnapshotOfImage:(UIImage *)image
                       selector:(SEL)selector
                     identifier:(NSString *)identifier
+                     tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr
 {
   return [self compareSnapshotOfViewLayerOrImage:image
                                         selector:selector
                                       identifier:identifier
-                                       tolerance:0
+                                       tolerance:tolerance
                                            error:errorPtr];
 }
 

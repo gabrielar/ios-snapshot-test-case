@@ -25,8 +25,10 @@
 //
 
 
+#import "TestView.h"
+
 #import <XCTest/XCTest.h>
-#import "FBSnapshotTestCase.h"
+#import <GDRSSnapshotTestCase/GDRSSnapshotTestCase.h>
 
 
 #define TestableFBSnapshotVerifyViewLayerOrImage(what__, viewLayerOrImage__, identifier__) \
@@ -41,7 +43,7 @@
   _FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewLayerOrImage__, identifier__, suffixes__, tolerance__) \
 
 
-@interface FBSnapshotTestCaseTest : FBSnapshotTestCase
+@interface FBSnapshotTestCaseTest : XCTestCase
 
 @end
 
@@ -49,7 +51,7 @@
 
 - (void)setUp {
     [super setUp];
-    //self.recordMode = YES;
+    //FBSnapshotRecordMode = YES;
 }
 
 - (void)tearDown {
@@ -58,18 +60,18 @@
 
 - (void)testVerifyView
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  FBSnapshotVerifyView(testView, nil)
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
+  FBSnapshotVerifyView(testView, nil);
 }
 
 - (void)testVerifyViewWithNonMatchingImage
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  if (self.recordMode) {
-    testView = [self createTestViewWithSubViewColor:[UIColor blueColor]];
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
+  if (FBSnapshotRecordMode) {
+    testView = [[TestView alloc] initWithSubViewColor:[UIColor blueColor]];
   }
   
-  TestableFBSnapshotVerifyViewLayerOrImage(View, testView, @"testVerifyImageWithWrongImage")
+  TestableFBSnapshotVerifyViewLayerOrImage(View, testView, @"testVerifyImageWithWrongImage");
   
   XCTAssertFalse(testSuccess__);
   NSError *firstError = errors__.firstObject;
@@ -80,15 +82,15 @@
 
 - (void)testVerifyLayer
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  FBSnapshotVerifyLayer(testView.layer, nil)
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
+  FBSnapshotVerifyLayer(testView.layer, nil);
 }
 
 - (void)testVerifyLayerWithNonMatchingImage
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  if (self.recordMode) {
-    testView = [self createTestViewWithSubViewColor:[UIColor blueColor]];
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
+  if (FBSnapshotRecordMode) {
+    testView = [[TestView alloc] initWithSubViewColor:[UIColor blueColor]];
   }
   
   TestableFBSnapshotVerifyViewLayerOrImage(Layer, testView.layer, @"testVerifyImageWithWrongImage")
@@ -109,7 +111,7 @@
 - (void)testVerifyImageWithNonMatchingImage
 {
   UIImage *image = [self _bundledImageNamed:@"square_with_text" type:@"png"];
-  if (self.recordMode) {
+  if (FBSnapshotRecordMode) {
     image = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
   }
   
@@ -124,22 +126,6 @@
 
 
 #pragma mark - Private helper methods
-
-- (UIView *)createTestViewWithSubViewColor:(UIColor *)subViewColor
-{
-  UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-  testView.backgroundColor = [UIColor whiteColor];
-  
-  UIView *subview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-  subview.backgroundColor = subViewColor;
-  [testView addSubview:subview];
-  
-  UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-  label.text = @"Some Text";
-  [testView addSubview:label];
-  
-  return testView;
-}
 
 - (UIImage *)_bundledImageNamed:(NSString *)name type:(NSString *)type
 {

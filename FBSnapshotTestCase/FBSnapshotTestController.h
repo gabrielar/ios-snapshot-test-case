@@ -97,6 +97,7 @@ extern NSString *const FBDiffedImageKey;
 - (BOOL)compareSnapshotOfLayer:(CALayer *)layer
                       selector:(SEL)selector
                     identifier:(NSString *)identifier
+                     tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr;
 
 /**
@@ -110,6 +111,7 @@ extern NSString *const FBDiffedImageKey;
 - (BOOL)compareSnapshotOfView:(UIView *)view
                      selector:(SEL)selector
                    identifier:(NSString *)identifier
+                    tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr;
 
 /**
@@ -123,6 +125,7 @@ extern NSString *const FBDiffedImageKey;
 - (BOOL)compareSnapshotOfImage:(UIImage *)image
                       selector:(SEL)selector
                     identifier:(NSString *)identifier
+                     tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr;
 
 /**

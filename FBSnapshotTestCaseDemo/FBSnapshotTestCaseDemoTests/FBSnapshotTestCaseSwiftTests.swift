@@ -8,12 +8,14 @@
 *
 */
 
+import XCTest
 import GDRSSnapshotTestCase
 
-class FBSnapshotTestCaseSwiftTest: FBSnapshotTestCase {
+class FBSnapshotTestCaseSwiftTest: XCTestCase, FBSnapshotCapableTestCase {
+  
   override func setUp() {
     super.setUp()
-    recordMode = false
+    self.FBSnapshotRecordMode = false
   }
 
   func testExample() {
@@ -22,4 +24,11 @@ class FBSnapshotTestCaseSwiftTest: FBSnapshotTestCase {
     FBSnapshotVerifyView(view)
     FBSnapshotVerifyLayer(view.layer)
   }
+  
+  func fbAssert(assertion: Bool, message: String, file: StaticString, line: UInt) {
+    if !assertion {
+      XCTFail(message, file: file, line: line)
+    }
+  }
+
 }
