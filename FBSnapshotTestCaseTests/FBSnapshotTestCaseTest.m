@@ -49,7 +49,7 @@
 
 - (void)setUp {
     [super setUp];
-    //self.recordMode = YES;
+    //FBSnapshotRecordMode = YES;
 }
 
 - (void)tearDown {
