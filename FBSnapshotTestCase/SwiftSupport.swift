@@ -100,11 +100,12 @@ public extension FBSnapshotCapableTestCase where Self: NSObject {
       
     }
     
-    fbAssert(comparisonSuccess, message: "Snapshot comparison failed: \(errors.first!)", file: file, line: line)
+    let errorMessage = errors.first?.description ?? "unknown error"
+    fbAssert(comparisonSuccess, message: "Snapshot comparison failed: \(errorMessage)", file: file, line: line)
     
   }
 
-//  func assert(assertion: Bool, message: String, file: StaticString, line: UInt) {
+//  func fbAssert(assertion: Bool, message: String, file: StaticString, line: UInt) {
 //    if !assertion {
 //      XCTFail(message, file: file, line: line)
 //    }
