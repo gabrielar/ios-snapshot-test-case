@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GDRSSnapshotTestCase"
-  s.version      = "0.1.0"
+  s.version      = "0.2.0"
   s.summary      = "Snapshot view unit tests for iOS"
   s.description  = <<-DESC
                     A "snapshot test case" takes a configured UIView or CALayer
