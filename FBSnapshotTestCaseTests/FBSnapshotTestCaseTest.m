@@ -25,6 +25,8 @@
 //
 
 
+#import "TestView.h"
+
 #import <XCTest/XCTest.h>
 #import <GDRSSnapshotTestCase/GDRSSnapshotTestCase.h>
 
@@ -58,15 +60,15 @@
 
 - (void)testVerifyView
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
   FBSnapshotVerifyView(testView, nil);
 }
 
 - (void)testVerifyViewWithNonMatchingImage
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
   if (FBSnapshotRecordMode) {
-    testView = [self createTestViewWithSubViewColor:[UIColor blueColor]];
+    testView = [[TestView alloc] initWithSubViewColor:[UIColor blueColor]];
   }
   
   TestableFBSnapshotVerifyViewLayerOrImage(View, testView, @"testVerifyImageWithWrongImage");
@@ -80,15 +82,15 @@
 
 - (void)testVerifyLayer
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
   FBSnapshotVerifyLayer(testView.layer, nil);
 }
 
 - (void)testVerifyLayerWithNonMatchingImage
 {
-  UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
+  UIView *testView = [[TestView alloc] initWithSubViewColor:[UIColor redColor]];
   if (FBSnapshotRecordMode) {
-    testView = [self createTestViewWithSubViewColor:[UIColor blueColor]];
+    testView = [[TestView alloc] initWithSubViewColor:[UIColor blueColor]];
   }
   
   TestableFBSnapshotVerifyViewLayerOrImage(Layer, testView.layer, @"testVerifyImageWithWrongImage")
@@ -124,22 +126,6 @@
 
 
 #pragma mark - Private helper methods
-
-- (UIView *)createTestViewWithSubViewColor:(UIColor *)subViewColor
-{
-  UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-  testView.backgroundColor = [UIColor whiteColor];
-  
-  UIView *subview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-  subview.backgroundColor = subViewColor;
-  [testView addSubview:subview];
-  
-  UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-  label.text = @"Some Text";
-  [testView addSubview:label];
-  
-  return testView;
-}
 
 - (UIImage *)_bundledImageNamed:(NSString *)name type:(NSString *)type
 {
