@@ -19,7 +19,7 @@
 		7834CD111CE29A9D003B5CC2 /* GDRSSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7834CD0F1CE2996F003B5CC2 /* GDRSSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78DD30AB1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DD30AA1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m */; };
 		78DD30AC1CD6AABD0003BCB8 /* FBSnapshotTestCaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DD30AA1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m */; };
-		827137841C63AB7000354E42 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8271377A1C63AB6F00354E42 /* FBSnapshotTestCase.framework */; };
+		827137841C63AB7000354E42 /* GDRSSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8271377A1C63AB6F00354E42 /* GDRSSnapshotTestCase.framework */; };
 		827137911C63ABE900354E42 /* UIImage+Compare.h in Headers */ = {isa = PBXBuildFile; fileRef = 133564101B59C3F500A4E4BF /* UIImage+Compare.h */; };
 		827137921C63ABF000354E42 /* UIImage+Diff.h in Headers */ = {isa = PBXBuildFile; fileRef = 133564121B59C3F500A4E4BF /* UIImage+Diff.h */; };
 		827137931C63ABF000354E42 /* UIImage+Snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 133564141B59C3F500A4E4BF /* UIImage+Snapshot.h */; };
@@ -40,7 +40,7 @@
 		827137A21C63AC0D00354E42 /* square-copy.png in Resources */ = {isa = PBXBuildFile; fileRef = B32447DA1AB78B5E00B1D6FF /* square-copy.png */; };
 		827137A31C63AC0D00354E42 /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = B32447DB1AB78B5E00B1D6FF /* square.png */; };
 		827137A41C63AC0F00354E42 /* FBSnapshotControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31988301AB784CB00B0A900 /* FBSnapshotControllerTests.m */; };
-		B31987FC1AB782D100B0A900 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31987F01AB782D000B0A900 /* FBSnapshotTestCase.framework */; };
+		B31987FC1AB782D100B0A900 /* GDRSSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31987F01AB782D000B0A900 /* GDRSSnapshotTestCase.framework */; };
 		B31988281AB7849400B0A900 /* FBSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = B31988201AB7849400B0A900 /* FBSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B31988291AB7849400B0A900 /* FBSnapshotTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = B31988211AB7849400B0A900 /* FBSnapshotTestCase.m */; };
 		B319882A1AB7849400B0A900 /* FBSnapshotTestController.h in Headers */ = {isa = PBXBuildFile; fileRef = B31988221AB7849400B0A900 /* FBSnapshotTestController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -85,9 +85,9 @@
 		13CBB39C1AEE013900B6ADBA /* FBSnapshotTestCasePlatform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSnapshotTestCasePlatform.m; sourceTree = "<group>"; };
 		7834CD0F1CE2996F003B5CC2 /* GDRSSnapshotTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GDRSSnapshotTestCase.h; sourceTree = "<group>"; };
 		78DD30AA1CD6AAB50003BCB8 /* FBSnapshotTestCaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSnapshotTestCaseTest.m; sourceTree = "<group>"; };
-		8271377A1C63AB6F00354E42 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8271377A1C63AB6F00354E42 /* GDRSSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GDRSSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		827137831C63AB7000354E42 /* FBSnapshotTestCase tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FBSnapshotTestCase tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B31987F01AB782D000B0A900 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B31987F01AB782D000B0A900 /* GDRSSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GDRSSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31987F41AB782D000B0A900 /* FBSnapshotTestCase-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FBSnapshotTestCase-Info.plist"; sourceTree = "<group>"; };
 		B31987FB1AB782D100B0A900 /* FBSnapshotTestCase iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FBSnapshotTestCase iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31988011AB782D100B0A900 /* FBSnapshotTestCaseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FBSnapshotTestCaseTests-Info.plist"; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				827137841C63AB7000354E42 /* FBSnapshotTestCase.framework in Frameworks */,
+				827137841C63AB7000354E42 /* GDRSSnapshotTestCase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B31987FC1AB782D100B0A900 /* FBSnapshotTestCase.framework in Frameworks */,
+				B31987FC1AB782D100B0A900 /* GDRSSnapshotTestCase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,9 +169,9 @@
 		B31987F11AB782D000B0A900 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B31987F01AB782D000B0A900 /* FBSnapshotTestCase.framework */,
+				B31987F01AB782D000B0A900 /* GDRSSnapshotTestCase.framework */,
 				B31987FB1AB782D100B0A900 /* FBSnapshotTestCase iOS Tests.xctest */,
-				8271377A1C63AB6F00354E42 /* FBSnapshotTestCase.framework */,
+				8271377A1C63AB6F00354E42 /* GDRSSnapshotTestCase.framework */,
 				827137831C63AB7000354E42 /* FBSnapshotTestCase tvOS Tests.xctest */,
 			);
 			name = Products;
@@ -278,7 +278,7 @@
 			);
 			name = "FBSnapshotTestCase tvOS";
 			productName = "FBSnapshotTestCase tvOS";
-			productReference = 8271377A1C63AB6F00354E42 /* FBSnapshotTestCase.framework */;
+			productReference = 8271377A1C63AB6F00354E42 /* GDRSSnapshotTestCase.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		827137821C63AB7000354E42 /* FBSnapshotTestCase tvOS Tests */ = {
@@ -314,7 +314,7 @@
 			);
 			name = "FBSnapshotTestCase iOS";
 			productName = FBSnapshotTestCase;
-			productReference = B31987F01AB782D000B0A900 /* FBSnapshotTestCase.framework */;
+			productReference = B31987F01AB782D000B0A900 /* GDRSSnapshotTestCase.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		B31987FA1AB782D100B0A900 /* FBSnapshotTestCase iOS Tests */ = {
@@ -502,13 +502,9 @@
 				INFOPLIST_FILE = "$(SRCROOT)/FBSnapshotTestCase/FBSnapshotTestCase-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					XCTest,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.FBSnapshotTestCase-tvOS";
-				PRODUCT_NAME = FBSnapshotTestCase;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gdrsconsulting.GDRSSnapshotTestCase;
+				PRODUCT_NAME = GDRSSnapshotTestCase;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -533,13 +529,9 @@
 				INFOPLIST_FILE = "$(SRCROOT)/FBSnapshotTestCase/FBSnapshotTestCase-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					XCTest,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.FBSnapshotTestCase-tvOS";
-				PRODUCT_NAME = FBSnapshotTestCase;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gdrsconsulting.GDRSSnapshotTestCase;
+				PRODUCT_NAME = GDRSSnapshotTestCase;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -678,13 +670,9 @@
 				INFOPLIST_FILE = "FBSnapshotTestCase/FBSnapshotTestCase-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					XCTest,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSnapshotTestCase;
-				PRODUCT_NAME = FBSnapshotTestCase;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gdrsconsulting.GDRSSnapshotTestCase;
+				PRODUCT_NAME = GDRSSnapshotTestCase;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -705,13 +693,9 @@
 				INFOPLIST_FILE = "FBSnapshotTestCase/FBSnapshotTestCase-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					XCTest,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSnapshotTestCase;
-				PRODUCT_NAME = FBSnapshotTestCase;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gdrsconsulting.GDRSSnapshotTestCase;
+				PRODUCT_NAME = GDRSSnapshotTestCase;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

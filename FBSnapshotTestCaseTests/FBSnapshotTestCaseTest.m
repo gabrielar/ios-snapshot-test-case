@@ -26,7 +26,7 @@
 
 
 #import <XCTest/XCTest.h>
-#import "FBSnapshotTestCase.h"
+#import <GDRSSnapshotTestCase/GDRSSnapshotTestCase.h>
 
 
 #define TestableFBSnapshotVerifyViewLayerOrImage(what__, viewLayerOrImage__, identifier__) \
@@ -41,7 +41,7 @@
   _FBSnapshotVerifyViewLayerOrImageWithOptions(what__, viewLayerOrImage__, identifier__, suffixes__, tolerance__) \
 
 
-@interface FBSnapshotTestCaseTest : FBSnapshotTestCase
+@interface FBSnapshotTestCaseTest : XCTestCase
 
 @end
 
@@ -59,17 +59,17 @@
 - (void)testVerifyView
 {
   UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  FBSnapshotVerifyView(testView, nil)
+  FBSnapshotVerifyView(testView, nil);
 }
 
 - (void)testVerifyViewWithNonMatchingImage
 {
   UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  if (self.recordMode) {
+  if (FBSnapshotRecordMode) {
     testView = [self createTestViewWithSubViewColor:[UIColor blueColor]];
   }
   
-  TestableFBSnapshotVerifyViewLayerOrImage(View, testView, @"testVerifyImageWithWrongImage")
+  TestableFBSnapshotVerifyViewLayerOrImage(View, testView, @"testVerifyImageWithWrongImage");
   
   XCTAssertFalse(testSuccess__);
   NSError *firstError = errors__.firstObject;
@@ -81,13 +81,13 @@
 - (void)testVerifyLayer
 {
   UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  FBSnapshotVerifyLayer(testView.layer, nil)
+  FBSnapshotVerifyLayer(testView.layer, nil);
 }
 
 - (void)testVerifyLayerWithNonMatchingImage
 {
   UIView *testView = [self createTestViewWithSubViewColor:[UIColor redColor]];
-  if (self.recordMode) {
+  if (FBSnapshotRecordMode) {
     testView = [self createTestViewWithSubViewColor:[UIColor blueColor]];
   }
   
@@ -109,7 +109,7 @@
 - (void)testVerifyImageWithNonMatchingImage
 {
   UIImage *image = [self _bundledImageNamed:@"square_with_text" type:@"png"];
-  if (self.recordMode) {
+  if (FBSnapshotRecordMode) {
     image = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
   }
   

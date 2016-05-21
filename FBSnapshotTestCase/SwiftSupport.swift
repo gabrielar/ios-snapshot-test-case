@@ -9,7 +9,7 @@
 */
 
 
-import XCTest
+import Foundation
 
 public protocol FBSnapshotCapableTestCase: class {
   
@@ -19,13 +19,15 @@ public protocol FBSnapshotCapableTestCase: class {
   func FBSnapshotVerifyLayer(layer: CALayer, identifier: String, suffixes: NSOrderedSet, tolerance: CGFloat, file: StaticString, line: UInt)
   func FBSnapshotVerifyImage(image: UIImage, identifier: String, suffixes: NSOrderedSet, tolerance: CGFloat, file: StaticString, line: UInt)
   
+  func fbAssert(assertion: Bool, message: String, file: StaticString, line: UInt)
+  
 }
 
-public extension FBSnapshotCapableTestCase where Self: XCTestCase {
+public extension FBSnapshotCapableTestCase where Self: NSObject {
   
   public var FBSnapshotRecordMode: Bool {
-    set { self.__FBSnapshotTestCase__snapshotController.recordMode = newValue }
-    get { return self.__FBSnapshotTestCase__snapshotController.recordMode }
+    set { __FBSnapshotTestCase__TestClassSnapshotController(self).recordMode = newValue }
+    get { return __FBSnapshotTestCase__TestClassSnapshotController(self).recordMode }
   }
   
   public func FBSnapshotVerifyView(view: UIView, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
@@ -41,59 +43,72 @@ public extension FBSnapshotCapableTestCase where Self: XCTestCase {
   }
   
   private func FBSnapshotVerifyViewLayerOrImage(viewOrLayer: AnyObject, identifier: String = "", suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(), tolerance: CGFloat = 0, file: StaticString = #file, line: UInt = #line) {
-    let envReferenceImageDirectory = self.getReferenceImageDirectoryWithDefault(FB_REFERENCE_IMAGE_DIR)
-    var error: NSError?
+    
+    let snapshotController = __FBSnapshotTestCase__TestClassSnapshotController(self)
+    guard let envReferenceImageDirectory = __FBSnapshotTestCase__getReferenceImageDirectoryWithDefault(self, FB_REFERENCE_IMAGE_DIR) else {
+      fbAssert(false, message: "Missing value for referenceImagesDirectory - Set FB_REFERENCE_IMAGE_DIR as Environment variable in your scheme.", file: file, line: line)
+      return
+    }
+    
+    var errors = [NSError]()
     var comparisonSuccess = false
 
-    if let envReferenceImageDirectory = envReferenceImageDirectory {
-      for suffix in suffixes {
-        let referenceImagesDirectory = "\(envReferenceImageDirectory)\(suffix)"
-        if viewOrLayer.isKindOfClass(UIView) {
-          do {
-            try __FBSnapshotTestCase__compareSnapshotOfView(viewOrLayer as! UIView, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
-            comparisonSuccess = true
-          } catch let error1 as NSError {
-            error = error1
-            comparisonSuccess = false
-          }
-        } else if viewOrLayer.isKindOfClass(CALayer) {
-          do {
-            try __FBSnapshotTestCase__compareSnapshotOfLayer(viewOrLayer as! CALayer, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
-            comparisonSuccess = true
-          } catch let error1 as NSError {
-            error = error1
-            comparisonSuccess = false
-          }
-        } else if viewOrLayer.isKindOfClass(UIImage) {
-          do {
-            try __FBSnapshotTestCase__compareSnapshotOfImage(viewOrLayer as! UIImage, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
-            comparisonSuccess = true
-          } catch let error1 as NSError {
-            error = error1
-            comparisonSuccess = false
-          }
-        } else {
-          assertionFailure("Only UIView, CALayer or UIImage classes can be snapshotted")
+    for suffix in suffixes {
+      
+      snapshotController.referenceImagesDirectory = "\(envReferenceImageDirectory)\(suffix)"
+      
+      switch viewOrLayer {
+        
+      case let view as UIView:
+        do {
+          try snapshotController.compareSnapshotOfView(view, selector:__FBSnapshotTestCase__InvocationWithTestClass(self).selector, identifier: identifier, tolerance: tolerance)
+          comparisonSuccess = true
+        } catch let error1 as NSError {
+          errors.append(error1)
+          comparisonSuccess = false
         }
         
-        assert(self.FBSnapshotRecordMode == false, message: "Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!", file: file, line: line)
-        
-        if comparisonSuccess || self.FBSnapshotRecordMode {
-          break
+      case let layer as CALayer:
+        do {
+          try snapshotController.compareSnapshotOfLayer(layer, selector:__FBSnapshotTestCase__InvocationWithTestClass(self).selector, identifier: identifier, tolerance: tolerance)
+          comparisonSuccess = true
+        } catch let error1 as NSError {
+          errors.append(error1)
+          comparisonSuccess = false
         }
-
-        assert(comparisonSuccess, message: "Snapshot comparison failed: \(error)", file: file, line: line)
+        
+      case let image as UIImage:
+        do {
+          try snapshotController.compareSnapshotOfImage(image, selector:__FBSnapshotTestCase__InvocationWithTestClass(self).selector, identifier: identifier, tolerance: tolerance)
+          comparisonSuccess = true
+        } catch let error1 as NSError {
+          errors.append(error1)
+          comparisonSuccess = false
+        }
+        
+      default:
+        assertionFailure("Only UIView, CALayer or UIImage classes can be snapshotted")
+        
       }
-    } else {
-      XCTFail("Missing value for referenceImagesDirectory - Set FB_REFERENCE_IMAGE_DIR as Environment variable in your scheme.")
+      
+      fbAssert(self.FBSnapshotRecordMode == false, message: "Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!", file: file, line: line)
+      
+      if comparisonSuccess || self.FBSnapshotRecordMode {
+        break
+      }
+
+      
     }
+    
+    fbAssert(comparisonSuccess, message: "Snapshot comparison failed: \(errors.first!)", file: file, line: line)
+    
   }
 
-  func assert(assertion: Bool, message: String, file: StaticString, line: UInt) {
-    if !assertion {
-      XCTFail(message, file: file, line: line)
-    }
-  }
+//  func assert(assertion: Bool, message: String, file: StaticString, line: UInt) {
+//    if !assertion {
+//      XCTFail(message, file: file, line: line)
+//    }
+//  }
+  
 }
 
-extension FBSnapshotTestCase: FBSnapshotCapableTestCase {}
